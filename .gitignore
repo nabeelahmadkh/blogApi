@@ -1,0 +1,16 @@
+.DS_Store
+/target
+.project
+.classpath
+.settings
+target
+.project
+.settings
+.classpath
+bin
+*.iml
+test-output
+*.log
+.DS_Store
+triggers/data
+.idea
