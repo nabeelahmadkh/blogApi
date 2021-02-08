@@ -17,12 +17,16 @@ public class MongoDbHealthCheck extends HealthCheck {
     @Override
     protected Result check() throws Exception {
         try {
+            System.out.println("in the mongo heath checks");
             MongoIterable<String> databases = mongoClient.listDatabaseNames();
             MongoDatabase database = mongoClient.getDatabase("blog");
             database.listCollections();
+            System.out.println("mongo heath check complete");
         } catch (Throwable t) {
+            System.out.println("mongo in unhealthy state");
             return Result.unhealthy(t);
         }
+        System.out.println("mongo in healthy state");
         return Result.healthy();
     }
 }

@@ -1,5 +1,6 @@
 package com.nbroadcast.backend.api.blog;
 
+import com.codahale.metrics.health.HealthCheck;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.nbroadcast.backend.api.blog.health.MongoDbHealthCheck;
@@ -10,6 +11,7 @@ import io.dropwizard.setup.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BlogApiApplication extends Application<BlogApiConfiguration> {
 
@@ -29,9 +31,15 @@ public class BlogApiApplication extends Application<BlogApiConfiguration> {
 
     @Override
     public void run(final BlogApiConfiguration configuration,
-                    final Environment environment) {
+                    final Environment environment) throws Exception {
         MongoDbHealthCheck mongoHeathCheck = new MongoDbHealthCheck(generateMongoClient(configuration.getMongoDbServers()));
         environment.healthChecks().register("mongo", mongoHeathCheck);
+
+        for (Map.Entry<String, HealthCheck.Result> entry : environment.healthChecks().runHealthChecks().entrySet()) {
+            if (!entry.getValue().isHealthy()) {
+                throw new Exception(String.format("Check health for %s failed!", entry.getKey()));
+            }
+        }
     }
 
     private MongoClient generateMongoClient(List<Server> mongoServers){
