@@ -1,7 +1,14 @@
 logging:
   level: INFO
   loggers:
-    com.nbroadcast.backend.api: DEBUG
+    com.nbroadcast.backend.api:
+      level: ERROR
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: ./logs/blogApi.log
+          archivedLogFilenamePattern: ./logs/blogApi-%d.log.gz
+          archivedFileCount: 100
 
 mongoDbServers:
   - host: "localhost"

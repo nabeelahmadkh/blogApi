@@ -1,10 +1,9 @@
 package com.nbroadcast.backend.api.blog;
 
-import com.nbroadcast.backend.api.blog.model.Server;
+import com.nbroadcast.backend.api.blog.api.Server;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.*;
 import java.util.List;
 

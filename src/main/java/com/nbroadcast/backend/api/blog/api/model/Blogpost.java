@@ -1,4 +1,4 @@
-package com.nbroadcast.backend.api.blog.model;
+package com.nbroadcast.backend.api.blog.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -20,4 +20,6 @@ public class Blogpost {
     List<String> tags;
     String title;
     Integer views;
+    DateTime createdAt;
+    DateTime updatedAt;
 }

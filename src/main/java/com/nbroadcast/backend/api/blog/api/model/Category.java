@@ -1,9 +1,9 @@
-package com.nbroadcast.backend.api.blog.model;
+package com.nbroadcast.backend.api.blog.api.model;
 
 public enum Category {
     SOFTWARE_ENGINEERING("Software Engineering"),
-    Hardware("Hardware"),
-    MachineLearning("Machine Learning");
+    HARDWARE("Hardware"),
+    MACHINE_LEARNING("Machine Learning");
 
     private String category;
 

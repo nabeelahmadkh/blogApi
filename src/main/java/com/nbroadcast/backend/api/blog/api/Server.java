@@ -1,4 +1,4 @@
-package com.nbroadcast.backend.api.blog.model;
+package com.nbroadcast.backend.api.blog.api;
 
 import lombok.Data;
 

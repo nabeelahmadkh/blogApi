@@ -3,8 +3,11 @@ package com.nbroadcast.backend.api.blog;
 import com.codahale.metrics.health.HealthCheck;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.nbroadcast.backend.api.blog.core.JacksonJsonExceptionMapper;
+import com.nbroadcast.backend.api.blog.core.JerseyViolationExceptionMapper;
 import com.nbroadcast.backend.api.blog.health.MongoDbHealthCheck;
-import com.nbroadcast.backend.api.blog.model.Server;
+import com.nbroadcast.backend.api.blog.api.Server;
+import com.nbroadcast.backend.api.blog.resources.Blogposts;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -32,14 +35,25 @@ public class BlogApiApplication extends Application<BlogApiConfiguration> {
     @Override
     public void run(final BlogApiConfiguration configuration,
                     final Environment environment) throws Exception {
-        MongoDbHealthCheck mongoHeathCheck = new MongoDbHealthCheck(generateMongoClient(configuration.getMongoDbServers()));
+
+        MongoClient mongoClient = generateMongoClient(configuration.getMongoDbServers());
+        MongoDbHealthCheck mongoHeathCheck = new MongoDbHealthCheck(mongoClient);
         environment.healthChecks().register("mongo", mongoHeathCheck);
 
+        //TODO: Check executor service for healthchecks
         for (Map.Entry<String, HealthCheck.Result> entry : environment.healthChecks().runHealthChecks().entrySet()) {
             if (!entry.getValue().isHealthy()) {
                 throw new Exception(String.format("Check health for %s failed!", entry.getKey()));
             }
         }
+
+        // Exception Mapper for Jersey Validation Exception
+        environment.jersey().register(new JerseyViolationExceptionMapper());
+        // Exception Mapper for Jackson Json Mapper Exception
+        environment.jersey().register(new JacksonJsonExceptionMapper());
+
+        // Registering Blog Api Endpoint.
+        environment.jersey().register(new Blogposts("blog", mongoClient));
     }
 
     private MongoClient generateMongoClient(List<Server> mongoServers){
